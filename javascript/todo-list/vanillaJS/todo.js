@@ -4,8 +4,9 @@
 	var taskList = [];
 
 	// Document Variables.
-	var addTodo = document.getElementById('addTodo');
-	var ulList = document.getElementById('list');
+	var todo = document.getElementById('addTodo');
+	var list = document.getElementById('list');
+
 
 	//fn() to create task Obj.
 	function task(task, completed) {
@@ -20,22 +21,52 @@
 		li.appendChild(liText);
 		li.setAttribute('id', ind);
 		li.setAttribute('class', 'task-item');
-		ulList.appendChild(li);
+		list.appendChild(li);
 	}
+
+	function editTask(taskId) {
+		var edit = document.getElementById(taskId);
+		var value = edit.innerText;
+		var editTask = '<input id="inp-' + taskId + '" class="task-input" value="' + value + '" />';
+		edit.innerHTML = editTask;
+		var newInput = document.getElementById('inp-' + taskId);
+		newInput.select();
+	} 
+
 	// Listening for "enter" key to be pressed.
-	addTodo.addEventListener("keyup", function() {
+	document.addEventListener("keyup", function(event) {
 		if(event.keyCode == 13) {
-			// Create task Onject
-			var newTask = new task(addTodo.value, false);
-			// Push newTask into the array (at the end).
-			taskList.push(newTask);
-			// Clear Value for next Input.
-			addTodo.value = '';
-			console.log('taskList ', taskList);
-			var taskIndex = taskList.length - 1;
-			addLi(newTask, taskIndex);
+			var getClassList = event.target.classList;
+			//Replace Alphanumerical Characters to get the index from the input - pattern would not affect addTodo.
+			var getId = event.target.id.replace(/[a-z]+\-/g, '');
+			var getValue = event.target.value;
+			if(getId === 'addTodo') {
+				// Create task Onject
+				var newTask = new task(getValue, false);
+				// Push newTask into the array (at the end).
+				taskList.push(newTask);
+				// Clear Value for next Input.
+				todo.value = '';
+				var taskIndex = taskList.length - 1;
+				addLi(newTask, taskIndex);
+			} else if(getClassList.contains('task-input')) {
+				var updateTask = document.getElementById(getId);
+				updateTask.innerHTML = getValue;
+				var index = parseInt(getId);
+				taskList[index].task = getValue;
+			}
+
 		}
 	});
 
+	// Listening for "dblClick" on li.
+	list.addEventListener('dblclick', function(event) {
+		var getClassList = event.target.classList;
+		var getId = event.target.id;
+		if(getClassList.contains('task-item')) {
+			editTask(getId);
+		}
+		
+	});
 })(); // End IIFE
 
