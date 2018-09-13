@@ -2,11 +2,11 @@
 	
 	// Begin Array.
 	var taskList = [];
+	var tmpValueObj;
 
 	// Document Variables.
 	var todo = document.getElementById('addTodo');
 	var list = document.getElementById('list');
-
 
 	//fn() to create task Obj.
 	function task(task, completed) {
@@ -26,12 +26,25 @@
 
 	function editTask(taskId) {
 		var edit = document.getElementById(taskId);
-		var value = edit.innerText;
-		var editTask = '<input id="inp-' + taskId + '" class="task-input" value="' + value + '" />';
+		// Save variable to IIFE Scope, so that it can be used to save a value if a user 'clicks' off the input.
+		tmpValueObj = {
+			value: edit.innerText,
+			ind: taskId
+		};
+		var editTask = '<input id="inp-' + taskId + '" class="task-input task" value="' + tmpValueObj.value + '" />';
 		edit.innerHTML = editTask;
 		var newInput = document.getElementById('inp-' + taskId);
-		newInput.select();
+		newInput.focus();
 	} 
+
+	function saveEdit(taskId, value) {
+		var updateTask = document.getElementById(taskId);
+		updateTask.innerHTML = value;
+		var index = parseInt(taskId);
+		taskList[index].task = value;
+
+		console.log('taskList ', taskList);
+	}
 
 	// Listening for "enter" key to be pressed.
 	document.addEventListener("keyup", function(event) {
@@ -41,6 +54,7 @@
 			var getId = event.target.id.replace(/[a-z]+\-/g, '');
 			var getValue = event.target.value;
 			if(getId === 'addTodo') {
+
 				// Create task Onject
 				var newTask = new task(getValue, false);
 				// Push newTask into the array (at the end).
@@ -50,10 +64,7 @@
 				var taskIndex = taskList.length - 1;
 				addLi(newTask, taskIndex);
 			} else if(getClassList.contains('task-input')) {
-				var updateTask = document.getElementById(getId);
-				updateTask.innerHTML = getValue;
-				var index = parseInt(getId);
-				taskList[index].task = getValue;
+				saveEdit(getId, getValue);
 			}
 
 		}
@@ -66,7 +77,20 @@
 		if(getClassList.contains('task-item')) {
 			editTask(getId);
 		}
-		
 	});
-})(); // End IIFE
 
+	document.addEventListener('click', function(event) {
+		var getClassList = event.target.classList;
+		try {
+			if(!getClassList.contains('task-input')) {
+				if(typeof tmpValueObj === 'object') {
+					saveEdit(tmpValueObj.ind, tmpValueObj.value);
+				}
+			} 
+		} catch(e) {
+			console.error('Error on Click: ', e);
+		}
+
+	});
+
+})(); // End IIFE
