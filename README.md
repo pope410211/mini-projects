@@ -5,7 +5,7 @@ A sample of mini-projects such as a todo list with more to be added. Projects wi
 ---
 
 ### ToDo List
-* [] `Vanillajs` version.
+* [ ] `Vanillajs` version.
   * Javascript Decisons:
     * IIFE:
 	  * I felt it was good practice, though certainly not needed for this project.
