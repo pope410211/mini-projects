@@ -2,7 +2,7 @@
 	
 	// Begin Array.
 	var taskList = [];
-
+	var toDoLoop = document.getElementsByClassName('task-input');
 	// Document Variables.
 	var todo = document.getElementById('addTodo');
 	var list = document.getElementById('list');
@@ -33,22 +33,26 @@
 	function editTask(taskId) {
 		var edit = document.getElementById(taskId);
 		// Save variable to IIFE Scope, so that it can be used to save a value if a user 'clicks' off the input.
-		var editTask = '<input id="inp-' + taskId + '" class="task-input task" value="' + tmpValueObj.value + '" />';
+		var editTask = '<input id="inp-' + taskId + '" class="task-input task" value="' + edit.innerText + '" />';
 		edit.innerHTML = editTask;
 		var newInput = document.getElementById('inp-' + taskId);
 		newInput.focus();
 
-		var toDoLoop = document.getElementsByClassName('task-input');
+		if(toDoLoop.length > 1) {
+			closeOutEdit(toDoLoop, taskId);
+		}
+	}
 
-		for(var i = 0; i<toDoLoop.length; i++) {
-			var tmpId = toDoLoop[i].id.replace(/[a-z]+\-/g, '');
-			var tmpVal = toDoLoop[i].value;
-			if(tmpId !== taskId) {
+	// fn() to be called and close the Edit-input
+	function closeOutEdit(loop, id) {
+		for(var i = 0; i < loop.length; i++) {
+			var tmpId = loop[i].id.replace(/[a-z]+\-/g, '');
+			var tmpVal = loop[i].value;
+			if(tmpId !== id) {
 				saveEdit(tmpId, tmpVal);
 			}
 		}
-		console.log('tod ', toDoLoop);
-	} 
+	}
 
 	// Listening for "enter" key to be pressed.
 	document.addEventListener("keyup", function(event) {
@@ -87,6 +91,13 @@
 		var getId = event.target.id;
 		if(getClassList.contains('task-item')) {
 			editTask(getId);
+		}
+	});
+
+	//Listend for a click on the Add Task Input and adjust editable inputs.
+	todo.addEventListener('click', function() {
+		if(toDoLoop.length >= 1) {
+			closeOutEdit(toDoLoop, 'addTodo');
 		}
 	});
 
