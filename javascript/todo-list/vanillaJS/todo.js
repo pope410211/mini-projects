@@ -1,12 +1,12 @@
 (function() {
 	
 	// Begin Array.
-	var taskList = [];
-	var toDoLoop = document.getElementsByClassName('task-input');
+	var taskList = [];	
 	// Document Variables.
 	var todo = document.getElementById('addTodo');
 	var list = document.getElementById('list');
-
+	var toDoLoop = document.getElementsByClassName('task-input');
+	var idRegex = /[a-z]+\-/g;
 	//fn() to create task Obj.
 	function task(task, completed) {
 		this.task = task;
@@ -46,7 +46,7 @@
 	// fn() to be called and close the Edit-input
 	function closeOutEdit(loop, id) {
 		for(var i = 0; i < loop.length; i++) {
-			var tmpId = loop[i].id.replace(/[a-z]+\-/g, '');
+			var tmpId = loop[i].id.replace(idRegex, '');
 			var tmpVal = loop[i].value;
 			if(tmpId !== id) {
 				saveEdit(tmpId, tmpVal);
@@ -58,7 +58,7 @@
 	document.addEventListener("keyup", function(event) {
 		var getClassList = event.target.classList;
 		//Replace Alphanumerical Characters to get the index from the input - pattern would not affect addTodo.
-		var getId = event.target.id.replace(/[a-z]+\-/g, '');
+		var getId = event.target.id.replace(idRegex, '');
 		var getValue = event.target.value;
 
 		if(event.keyCode === 13) {
