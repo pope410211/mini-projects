@@ -47,18 +47,26 @@
 	};
 
 	var maxRadius = 40;
-	var minRadius = 2;
+	// var minRadius = 2;
 
 	var colorArray = [
-		'#0d0cc',
-		'#a5a2a2',
-		'#e5e5e5',
-		'#fffff',
-		'#dd2020',
+		'#ECF0F1',
+		'#2A2A2A',
+		'#2D3540',
+		'#B32536',
+		'#2980B9',
 	];
+
 	window.addEventListener('mousemove', function(event) {
 		mouse.x = event.x;
 		mouse.y = event.y;
+	});
+
+	window.addEventListener('resize', function() {
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		init();
 	});
 
 	function Circle(x, y, dx, dy, radius) {
@@ -67,11 +75,13 @@
 		this.dx = dx;
 		this.dy = dy;
 		this.radius = radius;
+		this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
+		this.minRadius = radius;
 
 		this.draw = function() {
 			c.beginPath();
 			c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-			c.strokeStyle = 'blue';
+			c.fillStyle = this.color;
 			c.fill();
 		};
 
@@ -92,7 +102,7 @@
 				if (this.radius < maxRadius) {
 					this.radius += 1;
 				}
-			} else if (this.radius > minRadius) {
+			} else if (this.radius > this.minRadius) {
 				this.radius -= 1;
 			}
 
@@ -102,15 +112,19 @@
 	
 
 
-	var circleArray = [];
 
-	for (var i = 0; i < 100; i++) {
-		var radius = 30;
-		var x = Math.random() * (innerWidth - radius * 2) + radius;
-		var y = Math.random() * (innerHeight - radius * 2) + radius;
-		var dx = (Math.random() - 0.5); // Velocity of x
-		var dy = (Math.random() - 0.5); // Velocity of y
-		circleArray.push(new Circle(x, y, dx, dy, radius));
+	var circleArray = [];
+	function init() {
+		circleArray = [];
+
+		for (var i = 0; i < 800; i++) {
+			var radius = Math.random() * 3 + 1;
+			var x = Math.random() * (innerWidth - radius * 2) + radius;
+			var y = Math.random() * (innerHeight - radius * 2) + radius;
+			var dx = (Math.random() - 0.5); // Velocity of x
+			var dy = (Math.random() - 0.5); // Velocity of y
+			circleArray.push(new Circle(x, y, dx, dy, radius));
+		}
 	}
 
 	function animate() {
@@ -121,5 +135,6 @@
 		}
 	}
 
+	init();
 	animate();
 })();
