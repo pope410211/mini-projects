@@ -8,7 +8,7 @@
 	var toDoLoop = document.getElementsByClassName('task-input');
 	var idRegex = /[a-z]+\-/g;
 	//fn() to create task Obj.
-	function task(task, completed) {
+	function Task(task, completed) {
 		this.task = task;
 		this.completed = completed;
 	}
@@ -65,7 +65,7 @@
 			if(getId === 'addTodo') {
 
 				// Create task Object
-				var newTask = new task(getValue, false);
+				var newTask = new Task(getValue, false);
 				// Push newTask into the array (at the end).
 				taskList.push(newTask);
 				// Clear Value for next Input.
