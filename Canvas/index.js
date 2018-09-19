@@ -56,8 +56,9 @@
 		'#B32536',
 		'#2980B9',
 	];
-
-	window.addEventListener('mousemove', function(event) {
+	var mouseLeave = false;
+	canvas.addEventListener('mousemove', function(event) {
+		mouseLeave = false;
 		mouse.x = event.x;
 		mouse.y = event.y;
 	});
@@ -67,6 +68,10 @@
 		canvas.height = window.innerHeight;
 
 		init();
+	});
+
+	canvas.addEventListener('mouseleave', function(event) {
+		mouseLeave = true;
 	});
 
 	function Circle(x, y, dx, dy, radius) {
@@ -98,7 +103,7 @@
 			this.y += this.dy;
 
 			// interactivity
-			if (mouse.x - this.x < 50 && mouse.x - this.x > -50 && mouse.y - this.y < 50 && mouse.y - this.y > -50) {
+			if (mouse.x - this.x < 50 && mouse.x - this.x > -50 && mouse.y - this.y < 50 && mouse.y - this.y > -50 && mouseLeave === false) {
 				if (this.radius < maxRadius) {
 					this.radius += 1;
 				}
