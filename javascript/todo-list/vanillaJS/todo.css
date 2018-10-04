@@ -1,0 +1,7 @@
+.sp-item-completed {
+	text-decoration: line-through;
+}
+
+.hide {
+	display: none;
+}
